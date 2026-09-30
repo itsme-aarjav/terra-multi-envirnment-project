@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_key_pair" "terra_key" {
-  key_name   = "terra-key"
+  key_name   = "${var.project_name}-${var.environment}-key"
   public_key = file("${path.module}/terra-key.pub")
 }
 
@@ -58,8 +58,10 @@ resource "aws_instance" "web_server" {
   instance_type = var.instance_type
   key_name      = aws_key_pair.terra_key.key_name
 
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
-  user_data              = file("${path.module}/install_nginx.sh")
+  vpc_security_group_ids      = [aws_security_group.web_sg.id]
+  associate_public_ip_address = true
+  user_data                   = file("${path.module}/install_nginx.sh")
+  user_data_replace_on_change = true
 
   root_block_device {
     volume_size           = var.volume_size

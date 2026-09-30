@@ -1,8 +1,10 @@
 #!/bin/bash
-dnf update -y
-dnf install -y nginx
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update -y
+apt-get install -y nginx
 
 systemctl start nginx
 systemctl enable nginx
 
-echo "<h1>Server is running on $(hostname -f)</h1>" > /usr/share/nginx/html/index.html
+echo "<h1>Server is running on $(hostname -f)</h1>" > /var/www/html/index.html
